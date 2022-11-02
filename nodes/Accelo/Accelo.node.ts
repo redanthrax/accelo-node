@@ -5,7 +5,7 @@ import {
     INodeTypeDescription,
 } from 'n8n-workflow';
 
-import { loadOptions } from './methods';
+//import { loadOptions } from './methods';
 import { router } from './actions/router';
 
 export class Accelo implements INodeType {
@@ -24,7 +24,7 @@ export class Accelo implements INodeType {
         outputs: ['main'],
         credentials: [
             {
-                name: 'acceloOAuth2Api',
+                name: 'acceloApi',
                 required: true,
 				displayOptions: {
 					show: {
@@ -56,7 +56,7 @@ export class Accelo implements INodeType {
         ],
     };
 
-    methods = { loadOptions };
+    //methods = { loadOptions };
 
     async execute(this: IExecuteFunctions) {
         return await router.call(this);
