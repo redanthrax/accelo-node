@@ -4,14 +4,15 @@ import { IDataObject, INodeExecutionData } from 'n8n-workflow';
 
 import { apiRequest } from '../../../transport';
 
-export async function getAll(
+export async function getById(
 		this: IExecuteFunctions,
 		index: number,
 ): Promise<INodeExecutionData[]> {
-		const requestMethod = 'GET';
-		const endpoint = 'companies';
-		const body = {} as IDataObject;
+		const companyId = this.getNodeParameter('companyId', index) as string;
 		const qs = {} as IDataObject;
+		const requestMethod = 'GET';
+		const endpoint = `companies/${companyId}`;
+		const body = {} as IDataObject;
 
 		let responseData;
 		responseData = await apiRequest.call(this, requestMethod, endpoint, body, qs);

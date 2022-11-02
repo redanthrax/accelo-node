@@ -1,11 +1,13 @@
 import { IExecuteFunctions } from 'n8n-core';
 
+import * as company from './actions/company'
+
 import {
     INodeType,
     INodeTypeDescription,
 } from 'n8n-workflow';
 
-//import { loadOptions } from './methods';
+import { loadOptions, companyOptions } from './methods';
 import { router } from './actions/router';
 
 export class Accelo implements INodeType {
@@ -26,11 +28,6 @@ export class Accelo implements INodeType {
             {
                 name: 'acceloApi',
                 required: true,
-				displayOptions: {
-					show: {
-						authentication: ['oAuth2'],
-					},
-				},
             },
         ],
         requestDefaults: {
@@ -51,12 +48,13 @@ export class Accelo implements INodeType {
                         value: 'company',
                     },
                 ],
-                default: '',
+                default: 'company',
             },
+            ...company.description,
         ],
     };
 
-    //methods = { loadOptions };
+    methods = { loadOptions, companyOptions };
 
     async execute(this: IExecuteFunctions) {
         return await router.call(this);

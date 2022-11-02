@@ -1,5 +1,9 @@
 import { INodeProperties } from 'n8n-workflow';
 
+import * as get from './get';
+
+export { get }
+
 export const description: INodeProperties[] = [
     {
         displayName: 'Operation',
@@ -13,12 +17,13 @@ export const description: INodeProperties[] = [
         },
         options: [
             {
-                name: 'Get Many',
-                value: 'getAll',
-                description: 'Retrieve many companies',
-                action: 'Get many companies',
+                name: 'Get',
+                value: 'get',
+                description: 'Get data from the Companies endpoint.',
+                action: 'Get Companies Data',
             },
         ],
-        default: 'getAll',
-    }
+        default: 'get',
+    },
+    ...get.description,
 ];
