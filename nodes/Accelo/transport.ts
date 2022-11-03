@@ -11,16 +11,40 @@ import {
     ICredentialDataDecryptedObject,
 } from 'n8n-workflow';
 
+export async function acceloRequest(
+	this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
+    index: number,
+	method: IHttpRequestMethods,
+	endpoint: string,
+	body: IDataObject = {},
+	qs: IDataObject = {},
+): Promise<any> {
+    //just get all the fields
+    qs._fields = '_ALL';
+
+    //filtering
+    const filters = this.getNodeParameter('filters', index) as IDataObject;
+    if(filters) {
+        const filterString = Object.keys(filters).map(function(k) { return `${k}(${filters[k]})`}).join(',');
+        qs._filters = filterString
+    }
+
+    //searching
+    const search = this.getNodeParameter('search', index) as IDataObject;
+    if(search) qs._search = search;
+
+    const responseData = await apiRequestAllItems.call(this, method, endpoint, qs, body);
+    return responseData;
+}
+
 export async function apiRequest(
 	this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
 	method: IHttpRequestMethods,
 	endpoint: string,
 	body: IDataObject = {},
 	qs: IDataObject = {},
-	uri?: string,
 ): Promise<any> {
     const creds = await this.getCredentials('acceloApi');
-
 	let options: OptionsWithUri = {
 		headers: {
 			Accept: 'application/json',
@@ -29,7 +53,7 @@ export async function apiRequest(
 		method,
 		body,
 		qs,
-		uri: uri || `https://${creds.deployment}.api.accelo.com/api/v0/${endpoint}`,
+		uri: `https://${creds.deployment}.api.accelo.com/api/v0/${endpoint}`,
 		qsStringifyOptions: {
 			arrayFormat: 'repeat',
 		},

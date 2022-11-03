@@ -38,7 +38,7 @@ export const companyGetDescription: CompanyProperties = [
             },
             {
                 displayName: 'Company Status',
-                name: 'statusId',
+                name: 'status',
                 type: 'options',
                 default: '',
                 description: 'The company status',
