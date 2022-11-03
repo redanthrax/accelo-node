@@ -5,7 +5,6 @@ import { IExecuteFunctions, IHookFunctions, ILoadOptionsFunctions } from 'n8n-co
 import {
     IDataObject,
     IHttpRequestMethods,
-    IHttpRequestOptions,
     IPollFunctions,
     IExecuteSingleFunctions,
     ICredentialDataDecryptedObject,
@@ -23,14 +22,14 @@ export async function acceloRequest(
     qs._fields = '_ALL';
 
     //filtering
-    const filters = this.getNodeParameter('filters', index) as IDataObject;
+    const filters = this.getNodeParameter('filters', index, {}) as IDataObject;
     if(filters) {
         const filterString = Object.keys(filters).map(function(k) { return `${k}(${filters[k]})`}).join(',');
         qs._filters = filterString
     }
 
     //searching
-    const search = this.getNodeParameter('search', index) as IDataObject;
+    const search = this.getNodeParameter('search', index, '') as IDataObject;
     if(search) qs._search = search;
 
     const responseData = await apiRequestAllItems.call(this, method, endpoint, qs, body);
@@ -68,7 +67,12 @@ export async function apiRequest(
 
     //@ts-ignore
     const responseData = (await this.helpers.request(options)) as IDataObject;
-    return responseData['response'] as IDataObject[];
+    let response = responseData['response'] as IDataObject[];
+    if (!Array.isArray(response)) {
+        response = Object.values(response)[0] as IDataObject[];
+    }
+
+    return response;
 }
 
 
@@ -91,6 +95,7 @@ export async function apiRequestAllItems(
        qs._page++;
     }
     while(responseData.length > 0);
+
 
     return returnData;
 }
