@@ -18,7 +18,7 @@ export async function apiRequest(
 	body: IDataObject = {},
 	qs: IDataObject = {},
 	uri?: string,
-) {
+): Promise<any> {
     const creds = await this.getCredentials('acceloApi');
 
 	let options: OptionsWithUri = {
@@ -39,11 +39,36 @@ export async function apiRequest(
     const { access_token }  = await getToken.call(this, creds);
     (options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
 
-    //await for accelo, too fast and it gives you a token but you can't use it
+    //wait for accelo, too fast and it gives you a token but you can't use it
     await delay(500);
 
     //@ts-ignore
-    return this.helpers.request(options);
+    const responseData = (await this.helpers.request(options)) as IDataObject;
+    return responseData['response'] as IDataObject[];
+}
+
+
+export async function apiRequestAllItems(
+	this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
+	method: IHttpRequestMethods,
+	endpoint: string,
+	body: IDataObject = {},
+	qs: IDataObject = {},
+): Promise<any> {
+    qs._page = 0;
+    qs._limit = 100;
+
+	let returnData: IDataObject[] = [];
+    let responseData: IDataObject[];
+
+    do {
+       responseData = await apiRequest.call(this, method, endpoint, body, qs);
+       returnData = returnData.concat(responseData);
+       qs._page++;
+    }
+    while(responseData.length > 0);
+
+    return returnData;
 }
 
 function delay(ms: number){

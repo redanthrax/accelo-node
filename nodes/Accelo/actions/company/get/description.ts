@@ -2,40 +2,18 @@ import { CompanyProperties } from '../../Interfaces';
 
 export const companyGetDescription: CompanyProperties = [
     {
-        displayName: 'Get All Companies',
-        name: 'getAll',
-        type: 'boolean',
-        displayOptions: {
-            show: {
-                resource: ['company'],
-                operation: ['get'],
-            },
-        },
-        default: false,
-        description: 'Get all companies',
-    },
-    {
         displayName: 'Search',
         name: 'search',
-        type: 'collection',
-        placeholder: 'Add field',
-        default: {},
-        description: 'Search the companies request',
+        type: 'string',
+        placeholder: 'Search Term',
+        default: '',
+        description: 'Search the companies website, name, phone, or fax',
         displayOptions: {
             show: {
                 resource: ['company'],
                 operation: ['get'],
             },
         },
-        options: [
-            {
-                displayName: 'Name',
-                name: 'name',
-                type: 'string',
-                default: '',
-                description: 'The company name'
-            },
-        ],
     },
     {
         displayName: 'Filters',
