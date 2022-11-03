@@ -1,9 +1,9 @@
 import { AllEntities, Entity, PropertiesOf } from 'n8n-workflow';
 
 type AcceloMap = {
-    company: 'get';
-    contact: 'get';
-    task: 'get';
+		company: 'get';
+		contact: 'get';
+		task: 'get';
 };
 
 export type Accelo = AllEntities<AcceloMap>;

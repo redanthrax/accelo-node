@@ -13,7 +13,7 @@ export async function get(
 	const endpoint = 'contacts';
 	const body = {} as IDataObject;
 
-    const responseData = 
-        await acceloRequest.call(this, index, requestMethod, endpoint, body, qs);
+		const responseData = 
+				await acceloRequest.call(this, index, requestMethod, endpoint, body, qs);
 	return this.helpers.returnJsonArray(responseData);
-};
+}

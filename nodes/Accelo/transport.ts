@@ -3,37 +3,37 @@ import { OptionsWithUri } from 'request';
 import { IExecuteFunctions, IHookFunctions, ILoadOptionsFunctions } from 'n8n-core';
 
 import {
-    IDataObject,
-    IHttpRequestMethods,
-    IPollFunctions,
-    IExecuteSingleFunctions,
-    ICredentialDataDecryptedObject,
+		ICredentialDataDecryptedObject,
+		IDataObject,
+		IExecuteSingleFunctions,
+		IHttpRequestMethods,
+		IPollFunctions,
 } from 'n8n-workflow';
 
 export async function acceloRequest(
 	this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
-    index: number,
+		index: number,
 	method: IHttpRequestMethods,
 	endpoint: string,
 	body: IDataObject = {},
 	qs: IDataObject = {},
-): Promise<any> {
-    //just get all the fields
-    qs._fields = '_ALL';
+):Promise<IDataObject[]> {
+		//just get all the fields
+		qs._fields = '_ALL';
 
-    //filtering
-    const filters = this.getNodeParameter('filters', index, {}) as IDataObject;
-    if(filters) {
-        const filterString = Object.keys(filters).map(function(k) { return `${k}(${filters[k]})`}).join(',');
-        qs._filters = filterString
-    }
+		//filtering
+		const filters = this.getNodeParameter('filters', index, {}) as IDataObject;
+		if(filters) {
+				const filterString = Object.keys(filters).map(k => `${k}(${filters[k]})`).join(',');
+				qs._filters = filterString;
+		}
 
-    //searching
-    const search = this.getNodeParameter('search', index, '') as IDataObject;
-    if(search) qs._search = search;
+		//searching
+		const search = this.getNodeParameter('search', index, '') as IDataObject;
+		if(search) qs._search = search;
 
-    const responseData = await apiRequestAllItems.call(this, method, endpoint, qs, body);
-    return responseData;
+		const responseData = await apiRequestAllItems.call(this, method, endpoint, qs, body);
+		return responseData;
 }
 
 export async function apiRequest(
@@ -42,9 +42,9 @@ export async function apiRequest(
 	endpoint: string,
 	body: IDataObject = {},
 	qs: IDataObject = {},
-): Promise<any> {
-    const creds = await this.getCredentials('acceloApi');
-	let options: OptionsWithUri = {
+):Promise<IDataObject[]> {
+		const creds = await this.getCredentials('acceloApi');
+	const options: OptionsWithUri = {
 		headers: {
 			Accept: 'application/json',
 			'Content-Type': 'application/x-www-form-urlencoded',
@@ -59,20 +59,20 @@ export async function apiRequest(
 		json: true,
 	};
 
-    const { access_token }  = await getToken.call(this, creds);
-    (options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
+		const { access_token }  = await getToken.call(this, creds);
+		(options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
 
-    //wait for accelo, too fast and it gives you a token but you can't use it
-    await delay(500);
+		//wait for accelo, too fast and it gives you a token but you can't use it
+		await delay(500);
 
-    //@ts-ignore
-    const responseData = (await this.helpers.request(options)) as IDataObject;
-    let response = responseData['response'] as IDataObject[];
-    if (!Array.isArray(response)) {
-        response = Object.values(response)[0] as IDataObject[];
-    }
+		//@ts-ignore
+		const responseData = (await this.helpers.request(options)) as IDataObject;
+		let response = responseData['response'] as IDataObject[];
+		if (!Array.isArray(response)) {
+				response = Object.values(response)[0] as IDataObject[];
+		}
 
-    return response;
+		return response;
 }
 
 
@@ -82,46 +82,43 @@ export async function apiRequestAllItems(
 	endpoint: string,
 	body: IDataObject = {},
 	qs: IDataObject = {},
-): Promise<any> {
-    qs._page = 0;
-    qs._limit = 100;
+): Promise<IDataObject[]> {
+		qs._page = 0;
+		qs._limit = 100;
+				let returnData: IDataObject[] = [];
+				let responseData: IDataObject[];
+				do {
+								responseData = await apiRequest.call(this, method, endpoint, body, qs);
+								returnData = returnData.concat(responseData);
+								qs._page++;
+				}
+				while(responseData.length > 0);
 
-	let returnData: IDataObject[] = [];
-    let responseData: IDataObject[];
-
-    do {
-       responseData = await apiRequest.call(this, method, endpoint, body, qs);
-       returnData = returnData.concat(responseData);
-       qs._page++;
-    }
-    while(responseData.length > 0);
-
-
-    return returnData;
+		return returnData;
 }
 
 function delay(ms: number){
-    return new Promise(resolve => setTimeout(resolve, ms));
+		return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function getToken(
-    this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
-    credentials: ICredentialDataDecryptedObject,
+		this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
+		credentials: ICredentialDataDecryptedObject,
 ): Promise<IDataObject> {
-    const options: OptionsWithUri = {
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Authorization: `Basic ${Buffer.from(`${credentials.clientId}:${credentials.clientSecret}`).toString('base64')}`,
-        },
-        method: 'POST',
-        form: {
-            grant_type: 'client_credentials',
-            scope: 'write(all)',
-        },
-        uri: `https://${credentials.deployment}.api.accelo.com/oauth2/v0/token`,
-        json: true,
-    };
+		const options: OptionsWithUri = {
+				headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						Authorization: `Basic ${Buffer.from(`${credentials.clientId}:${credentials.clientSecret}`).toString('base64')}`,
+				},
+				method: 'POST',
+				form: {
+						grant_type: 'client_credentials',
+						scope: 'write(all)',
+				},
+				uri: `https://${credentials.deployment}.api.accelo.com/oauth2/v0/token`,
+				json: true,
+		};
 
-    //@ts-ignore
-    return this.helpers.request(options);
+		//@ts-ignore
+		return this.helpers.request(options);
 }

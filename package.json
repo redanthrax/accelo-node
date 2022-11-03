@@ -3,10 +3,11 @@
   "version": "0.1.0",
   "description": "An n8n node to connect to Accelo",
   "keywords": [
+    "n8n-nodes-accelo",
     "n8n-community-node-package"
   ],
   "license": "MIT",
-  "homepage": "",
+  "homepage": "https://github.com/redanthrax/accelo-node.git",
   "author": {
     "name": "redanthrax",
     "email": "red@4c.gg"

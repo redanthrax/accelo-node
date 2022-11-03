@@ -23,9 +23,21 @@ in the n8n community nodes documentation.
 ## Operations
 
 ### Get Companies
-- Get All
+- Get Companies
+    - Search
+    - Filters
+- Get Contacts
+    - Search
+    - Filters
+- Get Tasks
+    - Search
+    - Filters
 
 ## Credentials
+Navigate to Settings > API > Register Application.
+Create a Service Application with a user that has the access to resources
+you're trying to automate.
+Use the Client ID and Client Secret in this n8n node.
 
 ## Compatibility
 

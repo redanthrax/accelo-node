@@ -7,7 +7,7 @@ import {
 import { apiRequest, apiRequestAllItems } from '../transport';
 
 export async function getStaff(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-	let responseData = await apiRequestAllItems.call(this, 'GET', 'staff', {});
+	const responseData = await apiRequestAllItems.call(this, 'GET', 'staff', {});
 	if (responseData === undefined) {
 		throw new NodeOperationError(this.getNode(), 'No data got returned');
 	}
@@ -16,9 +16,9 @@ export async function getStaff(this: ILoadOptionsFunctions): Promise<INodeProper
 	for (const data of responseData) {
 		returnData.push({
 			name: `${data.firstname} ${data.surname}`,
-			value: data.id,
+			value: data.id as number,
 		});
-    }
+	}
 	returnData.sort((a, b) => {
 		if (a.name < b.name) {
 			return -1;
@@ -34,22 +34,22 @@ export async function getStaff(this: ILoadOptionsFunctions): Promise<INodeProper
 }
 
 export async function getCompanyStatuses(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-    const data = await getStatusData.call(this, 'companies/statuses');
-    return data;
+		const data = await getStatusData.call(this, 'companies/statuses');
+		return data;
 }
 
 export async function getContactStatuses(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-    const data = await getStatusData.call(this, 'contacts/statuses');
-    return data;
+		const data = await getStatusData.call(this, 'contacts/statuses');
+		return data;
 }
 
 export async function getTaskStatuses(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-    const data = await getStatusData.call(this, 'tasks/statuses');
-    return data;
+		const data = await getStatusData.call(this, 'tasks/statuses');
+		return data;
 }
 
 async function getStatusData(this: ILoadOptionsFunctions, endpoint: string): Promise<INodePropertyOptions[]> {
-	let responseData = await apiRequestAllItems.call(this, 'GET', endpoint, {});
+	const responseData = await apiRequestAllItems.call(this, 'GET', endpoint, {});
 	if (responseData === undefined) {
 		throw new NodeOperationError(this.getNode(), 'No data got returned');
 	}
@@ -57,10 +57,10 @@ async function getStatusData(this: ILoadOptionsFunctions, endpoint: string): Pro
 	const returnData: INodePropertyOptions[] = [];
 	for (const data of responseData) {
 		returnData.push({
-			name: data.title,
-			value: data.id,
+			name: data.title as string,
+			value: data.id as number,
 		});
-    }
+	}
 	returnData.sort((a, b) => {
 		if (a.name < b.name) {
 			return -1;
