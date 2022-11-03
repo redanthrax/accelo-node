@@ -62,6 +62,8 @@ export async function apiRequest(
 		const { access_token }  = await getToken.call(this, creds);
 		(options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
 
+        console.log(options);
+
 		//wait for accelo, too fast and it gives you a token but you can't use it
 		await delay(500);
 

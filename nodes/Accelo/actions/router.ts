@@ -7,8 +7,10 @@ import {
 
 import { Accelo } from './Interfaces';
 
+import * as affiliation from './affiliation';
 import * as company from './company';
 import * as contact from './contact';
+import * as request from './request';
 import * as task from './task';
 
 export async function router(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -27,11 +29,17 @@ export async function router(this: IExecuteFunctions): Promise<INodeExecutionDat
 
 				try {
 						switch(accelo.resource) {
+								case 'affiliation':
+										responseData = await affiliation[accelo.operation].execute.call(this, i);
+										break;
 								case 'company':
 										responseData = await company[accelo.operation].execute.call(this, i);
 										break;
 								case 'contact':
 										responseData = await contact[accelo.operation].execute.call(this, i);
+										break;
+								case 'request':
+										responseData = await request[accelo.operation].execute.call(this, i);
 										break;
 								case 'task':
 										responseData = await task[accelo.operation].execute.call(this, i);
