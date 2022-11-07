@@ -10,7 +10,7 @@ export async function get(
 ): Promise<INodeExecutionData[]> {
 	const qs = {} as IDataObject;
 	const requestMethod = 'GET';
-	const endpoint = 'requests';
+	const endpoint = 'activities';
 	const body = {} as IDataObject;
 
 		const responseData = 

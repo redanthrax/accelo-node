@@ -5,6 +5,7 @@ type AcceloMap = {
         affiliation: 'get';
 		company: 'get';
 		contact: 'get';
+        staff: 'get';
         request: 'get' | 'create';
 		task: 'get';
 };
@@ -15,6 +16,7 @@ export type AcceloActivity = Entity<AcceloMap, 'activity'>;
 export type AcceloAffiliation = Entity<AcceloMap, 'affiliation'>;
 export type AcceloCompany = Entity<AcceloMap, 'company'>;
 export type AcceloContact = Entity<AcceloMap, 'contact'>;
+export type AcceloStaff = Entity<AcceloMap, 'staff'>;
 export type AcceloTask = Entity<AcceloMap, 'task'>;
 export type AcceloRequest = Entity<AcceloMap, 'request'>;
 
@@ -22,5 +24,6 @@ export type ActivityProperties = PropertiesOf<AcceloActivity>;
 export type AffiliationProperties = PropertiesOf<AcceloAffiliation>;
 export type CompanyProperties = PropertiesOf<AcceloCompany>;
 export type ContactProperties = PropertiesOf<AcceloContact>;
+export type StaffProperties = PropertiesOf<AcceloStaff>;
 export type TaskProperties = PropertiesOf<AcceloTask>;
 export type RequestProperties = PropertiesOf<AcceloRequest>;

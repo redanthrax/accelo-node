@@ -1,9 +1,11 @@
 import { IExecuteFunctions } from 'n8n-core';
 
+import * as activity from './actions/activity';
 import * as affiliation from './actions/affiliation';
 import * as company from './actions/company';
 import * as contact from './actions/contact';
 import * as request from './actions/request';
+import * as staff from './actions/staff';
 import * as task from './actions/task';
 
 import {
@@ -48,6 +50,10 @@ export class Accelo implements INodeType {
 								noDataExpression: true,
 								options: [
 										{
+												name: 'Activity',
+												value: 'activity',
+										},
+										{
 												name: 'Affiliation',
 												value: 'affiliation',
 										},
@@ -64,16 +70,22 @@ export class Accelo implements INodeType {
 												value: 'request',
 										},
 										{
+												name: 'Staff',
+												value: 'staff',
+										},
+										{
 												name: 'Task',
 												value: 'task',
 										},
 								],
 								default: 'company',
 						},
+                        ...activity.description,
                         ...affiliation.description,
 						...company.description,
 						...contact.description,
                         ...request.description,
+                        ...staff.description,
 						...task.description,
 				],
 		};

@@ -41,6 +41,12 @@ export const activityGetDescription: ActivityProperties = [
 								type: 'number',
 								default: '',
 						},
+						{
+								displayName: 'Staff',
+								name: 'staff',
+								type: 'number',
+								default: '',
+						},
 				],
 		},
 ]
