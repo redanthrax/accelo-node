@@ -65,5 +65,4 @@ export const affiliationGetDescription: AffiliationProperties = [
 						},
 				],
 		},
-
 ];
