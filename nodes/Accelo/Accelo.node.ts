@@ -4,6 +4,7 @@ import * as activity from './actions/activity';
 import * as affiliation from './actions/affiliation';
 import * as company from './actions/company';
 import * as contact from './actions/contact';
+import * as issue from './actions/issue';
 import * as request from './actions/request';
 import * as staff from './actions/staff';
 import * as task from './actions/task';
@@ -66,6 +67,10 @@ export class Accelo implements INodeType {
 												value: 'contact',
 										},
 										{
+												name: 'Issue',
+												value: 'issue',
+										},
+										{
 												name: 'Request',
 												value: 'request',
 										},
@@ -84,6 +89,7 @@ export class Accelo implements INodeType {
                         ...affiliation.description,
 						...company.description,
 						...contact.description,
+                        ...issue.description,
                         ...request.description,
                         ...staff.description,
 						...task.description,

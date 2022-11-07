@@ -2,26 +2,12 @@ import { ActivityProperties } from '../../Interfaces';
 
 export const activityGetDescription: ActivityProperties = [
 		{
-				displayName: 'Search',
-				name: 'search',
-				type: 'string',
-				placeholder: 'Search Term',
-				default: '',
-				description: 'Search the request title',
-				displayOptions: {
-						show: {
-								resource: ['activity'],
-								operation: ['get'],
-						},
-				},
-		},
-		{
 				displayName: 'Filters',
 				name: 'filters',
 				type: 'collection',
 				placeholder: 'Add field',
 				default: {},
-				description: 'Filter the contacts request',
+				description: 'Filter the contacts activity',
 				displayOptions: {
 						show: {
 								resource: ['activity'],
