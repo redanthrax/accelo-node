@@ -36,7 +36,7 @@ export async function getStaff(this: ILoadOptionsFunctions): Promise<INodeProper
 
 export async function getRequestTypes(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
 	    const responseData = await apiRequest.call(this, 'GET', 'requests/types', {});
-		const data = await parseStatusData.call(this, responseData);
+		const data = await parseStatusData.call(this, responseData['response'] as IDataObject[]);
 		return data;
 }
 

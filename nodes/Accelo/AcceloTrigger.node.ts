@@ -2,6 +2,8 @@ import { IHookFunctions, IWebhookFunctions } from 'n8n-core';
 
 import { IDataObject, INodeType, INodeTypeDescription, IWebhookResponseData } from 'n8n-workflow';
 
+import { apiRequest } from './transport';
+
 export class AcceloTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Accelo Trigger',
@@ -52,26 +54,61 @@ export class AcceloTrigger implements INodeType {
 	webhookMethods = {
 		default: {
 			async checkExists(this: IHookFunctions): Promise<boolean> {
-				const resource = this.getNodeParameter('resource') as string;
 				const webhookData = this.getWorkflowStaticData('node');
 				const webhookUrl = this.getNodeWebhookUrl('default');
 
-                console.log('check exists');
-                return false;
+				const webhooks = await apiRequest.call(this, 'GET', 'webhooks/subscriptions');
+                console.log(webhooks);
+				for (const subscription of webhooks.subscriptions as IDataObject[]) {
+					if (subscription.trigger_url === webhookUrl) {
+						webhookData.webhookId = subscription.subscription_id;
+						return true;
+					}
+				}
+
+				return false;
 			},
 			async create(this: IHookFunctions): Promise<boolean> {
+				let webhookUrl = this.getNodeWebhookUrl('default') as string;
 				const resource = this.getNodeParameter('resource') as string;
-				const webhookUrl = this.getNodeWebhookUrl('default');
 				const webhookData = this.getWorkflowStaticData('node');
+                console.log(webhookData);
+				const endpoint = 'webhooks/subscriptions';
+				const body = {
+                    trigger_url: webhookUrl,
+                    event_id: resource,
+                    content_type: 'application/json',
+                    //secret: ''
+				};
 
-                console.log('create');
-                return true;
+				let responseData;
+				responseData = await apiRequest.call(this, 'POST', endpoint, body) as IDataObject;
+				if (responseData.subscription === undefined) {
+					// Required data is missing so was not successful
+					return false;
+				}
+
+                const sub = responseData.subscription as IDataObject;
+				webhookData.webhookId = sub.subscription_id as string;
+                console.log(webhookData);
+				return true;
 			},
 			async delete(this: IHookFunctions): Promise<boolean> {
 				const webhookData = this.getWorkflowStaticData('node');
+				if (webhookData.webhookId !== undefined) {
+                    const endpoint = `webhooks/subscriptions/${webhookData.webhookId}`;
+					try {
+						await apiRequest.call(this, 'DELETE', endpoint, {});
+					} catch (error) {
+						return false;
+					}
 
-                console.log('delete');
-                return true;
+                    console.log('delete webhook');
+
+					delete webhookData.webhookId;
+				}
+
+				return true;
 			},
         },
     };
@@ -80,7 +117,10 @@ export class AcceloTrigger implements INodeType {
 		const headerData = this.getHeaderData() as IDataObject;
 		const req = this.getRequestObject();
 		const authentication = this.getNodeParameter('authentication') as string;
+        console.log('async webhook call');
         console.log(headerData, req, authentication);
-        return {}
+		return {
+			workflowData: [this.helpers.returnJsonArray(req.body)],
+		};
     };
 };

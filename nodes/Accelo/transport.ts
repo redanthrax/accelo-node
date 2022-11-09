@@ -37,12 +37,12 @@ export async function acceloRequest(
 }
 
 export async function apiRequest(
-    this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
+    this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions | IHookFunctions,
     method: IHttpRequestMethods,
     endpoint: string,
     body: IDataObject = {},
-        qs: IDataObject = {},
-):Promise<IDataObject[]> {
+    qs: IDataObject = {},
+):Promise<IDataObject> {
     const creds = await this.getCredentials('acceloApi');
     const options: OptionsWithUri = {
         headers: {
@@ -61,19 +61,14 @@ export async function apiRequest(
 
     const { access_token }  = await getToken.call(this, creds);
     (options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
-
     console.log(options);
-
     //wait for accelo, too fast and it gives you a token but you can't use it
     await delay(500);
 
     //@ts-ignore
     const responseData = (await this.helpers.request(options)) as IDataObject;
-    let response = responseData['response'] as IDataObject[];
-    if (!Array.isArray(response)) {
-        response = Object.values(response)[0] as IDataObject[];
-    }
-
+    console.log(responseData);
+    let response = responseData['response'] as IDataObject;
     return response;
 }
 
@@ -82,14 +77,15 @@ export async function apiRequestAllItems(
     method: IHttpRequestMethods,
     endpoint: string,
     body: IDataObject = {},
-        qs: IDataObject = {},
+    qs: IDataObject = {},
 ): Promise<IDataObject[]> {
     qs._page = 0;
     qs._limit = 100;
     let returnData: IDataObject[] = [];
     let responseData: IDataObject[];
     do {
-        responseData = await apiRequest.call(this, method, endpoint, body, qs);
+        const response = await apiRequest.call(this, method, endpoint, body, qs) as IDataObject;
+        responseData = response['response'] as IDataObject[];
         returnData = returnData.concat(responseData);
         qs._page++;
     }
@@ -103,7 +99,7 @@ function delay(ms: number){
 }
 
 function getToken(
-    this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
+    this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions | IHookFunctions,
     credentials: ICredentialDataDecryptedObject,
 ): Promise<IDataObject> {
     const options: OptionsWithUri = {
