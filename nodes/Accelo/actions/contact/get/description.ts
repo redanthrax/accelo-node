@@ -15,6 +15,19 @@ export const contactGetDescription: ContactProperties = [
 						},
 				},
 		},
+        {
+            displayName: 'Get Profile Data',
+            name: 'profile',
+            type: 'boolean',
+            default: false,
+            description: 'Get additional profile data',
+            displayOptions: {
+                show: {
+                    resource: ['contact'],
+                    operation: ['get'],
+                },
+            },
+        },
 		{
 				displayName: 'Filters',
 				name: 'filters',
@@ -36,7 +49,37 @@ export const contactGetDescription: ContactProperties = [
 								default: '',
 						},
 						{
-								displayName: 'Contact Status Name or ID',
+								displayName: 'Fullname',
+								name: 'fullname',
+								type: 'string',
+								default: '',
+						},
+						{
+								displayName: 'Firstname',
+								name: 'firstname',
+								type: 'string',
+								default: '',
+						},
+						{
+								displayName: 'Username',
+								name: 'username',
+								type: 'string',
+								default: '',
+						},
+						{
+								displayName: 'Surname',
+								name: 'surname',
+								type: 'string',
+								default: '',
+						},
+						{
+								displayName: 'Title',
+								name: 'title',
+								type: 'string',
+								default: '',
+						},
+						{
+								displayName: 'Contact Status',
 								name: 'status',
 								type: 'options',
 								description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

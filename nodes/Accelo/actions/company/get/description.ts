@@ -36,7 +36,7 @@ export const companyGetDescription: CompanyProperties = [
 								default: '',
 						},
 						{
-								displayName: 'Company Status Name or ID',
+								displayName: 'Company Status',
 								name: 'status',
 								type: 'options',
 								description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

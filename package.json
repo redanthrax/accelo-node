@@ -34,6 +34,7 @@
         "dist/credentials/AcceloApi.credentials.js"
     ],
     "nodes": [
+        "dist/nodes/Accelo/AcceloTrigger.node.js",
         "dist/nodes/Accelo/Accelo.node.js"
     ]
   },
