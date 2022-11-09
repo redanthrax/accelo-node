@@ -117,7 +117,7 @@ export class AcceloTrigger implements INodeType {
 		const headerData = this.getHeaderData() as IDataObject;
 		const req = this.getRequestObject();
         console.log('async webhook call');
-        console.log(headerData, req);
+        console.log(headerData, req.body);
 		return {
 			workflowData: [this.helpers.returnJsonArray(req.body)],
 		};
