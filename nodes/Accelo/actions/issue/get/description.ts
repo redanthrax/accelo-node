@@ -15,13 +15,26 @@ export const issueGetDescription: IssueProperties = [
 						},
 				},
 		},
+				{
+						displayName: 'Get Profile Data',
+						name: 'profile',
+						type: 'boolean',
+						default: false,
+				description: 'Whether to get additional profile data',
+						displayOptions: {
+								show: {
+										resource: ['issue'],
+										operation: ['get'],
+								},
+						},
+				},
 		{
 				displayName: 'Filters',
 				name: 'filters',
 				type: 'collection',
 				placeholder: 'Add field',
 				default: {},
-				description: 'Filter the contacts request',
+				description: 'Filter the issue request',
 				displayOptions: {
 						show: {
 								resource: ['issue'],
@@ -37,4 +50,4 @@ export const issueGetDescription: IssueProperties = [
 						},
 				],
 		},
-]
+];

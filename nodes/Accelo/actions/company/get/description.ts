@@ -16,6 +16,19 @@ export const companyGetDescription: CompanyProperties = [
 				},
 		},
 		{
+				displayName: 'Get Profile Data',
+				name: 'profile',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to get additional profile data',
+				displayOptions: {
+						show: {
+								resource: ['company'],
+								operation: ['get'],
+						},
+				},
+		},
+		{
 				displayName: 'Filters',
 				name: 'filters',
 				type: 'collection',
@@ -36,7 +49,7 @@ export const companyGetDescription: CompanyProperties = [
 								default: '',
 						},
 						{
-								displayName: 'Company Status',
+								displayName: 'Company Status Name or ID',
 								name: 'status',
 								type: 'options',
 								description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

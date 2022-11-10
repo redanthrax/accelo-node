@@ -20,9 +20,9 @@ export const requestCreateDescription: RequestProperties = [
 		displayName: 'Request Body',
 		name: 'body',
 		type: 'string',
-        typeOptions: {
-            rows: 4,
-        },
+				typeOptions: {
+						rows: 4,
+				},
 		default: '',
 		placeholder: 'Request Body',
 		displayOptions: {
@@ -34,23 +34,23 @@ export const requestCreateDescription: RequestProperties = [
 		required: true,
 		description: 'The body of the Request',
 	},
-    {
-        displayName: 'Type',
-        name: 'type_id',
-        type: 'options',
-        required: true,
-        description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
-        default: '',
-        typeOptions: {
-            loadOptionsMethod: 'getRequestTypes',
-        },
+		{
+				displayName: 'Type Name or ID',
+				name: 'type_id',
+				type: 'options',
+				required: true,
+				description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
+				default: '',
+				typeOptions: {
+						loadOptionsMethod: 'getRequestTypes',
+				},
 		displayOptions: {
 			show: {
 				resource: ['request'],
 				operation: ['create'],
 			},
 		},
-    },
+		},
 	{
 		displayName: 'Affiliation',
 		name: 'affiliation_id',
@@ -66,4 +66,4 @@ export const requestCreateDescription: RequestProperties = [
 		},
 		description: 'The affiliation of the Request',
 	},
-]
+];

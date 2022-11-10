@@ -36,7 +36,7 @@ export const taskGetDescription: TaskProperties = [
 								default: '',
 						},
 						{
-								displayName: 'Assignee',
+								displayName: 'Assignee Name or ID',
 								name: 'assignee',
 								type: 'options',
 								default: '',
@@ -46,7 +46,7 @@ export const taskGetDescription: TaskProperties = [
 								},
 						},
 						{
-								displayName: 'Manager',
+								displayName: 'Manager Name or ID',
 								name: 'manager',
 								type: 'options',
 								default: '',
@@ -56,7 +56,7 @@ export const taskGetDescription: TaskProperties = [
 								},
 						},
 						{
-								displayName: 'Task Status',
+								displayName: 'Task Status Name or ID',
 								name: 'status',
 								type: 'options',
 								description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

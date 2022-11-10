@@ -16,6 +16,19 @@ export const affiliationGetDescription: AffiliationProperties = [
 				},
 		},
 		{
+				displayName: 'Get Profile Data',
+				name: 'profile',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to get additional profile data',
+				displayOptions: {
+						show: {
+								resource: ['affiliation'],
+								operation: ['get'],
+						},
+				},
+		},
+		{
 				displayName: 'Filters',
 				name: 'filters',
 				type: 'collection',
@@ -39,6 +52,7 @@ export const affiliationGetDescription: AffiliationProperties = [
 								displayName: 'Email',
 								name: 'email',
 								type: 'string',
+								placeholder: 'name@email.com',
 								default: '',
 						},
 						{
@@ -54,7 +68,7 @@ export const affiliationGetDescription: AffiliationProperties = [
 								default: '',
 						},
 						{
-								displayName: 'Status',
+								displayName: 'Status Name or ID',
 								name: 'status',
 								type: 'options',
 								default: '',

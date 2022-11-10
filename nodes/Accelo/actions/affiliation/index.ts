@@ -20,7 +20,7 @@ export const description: INodeProperties[] = [
 								name: 'Get',
 								value: 'get',
 								description: 'Get data from the Affiliations endpoint',
-								action: 'Get Affiations data',
+								action: 'Get affiations data',
 						},
 				],
 				default: 'get',

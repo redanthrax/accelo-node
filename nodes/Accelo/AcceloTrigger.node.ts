@@ -18,12 +18,12 @@ export class AcceloTrigger implements INodeType {
 		},
 		inputs: [],
 		outputs: ['main'],
-        credentials: [
-            {
-                name: 'acceloApi',
-                required: true,
-            },
-        ],
+		credentials: [
+			{
+				name: 'acceloApi',
+				required: true,
+			},
+		],
 		webhooks: [
 			{
 				name: 'default',
@@ -32,23 +32,71 @@ export class AcceloTrigger implements INodeType {
 				path: 'webhook',
 			},
 		],
-        properties: [
+		properties: [
 			{
 				displayName: 'Resource',
 				name: 'resource',
 				type: 'options',
-				default: '',
-                noDataExpression: true,
-                description: 'Event that triggers the webhook',
+				default: 'delete_activity',
+				noDataExpression: true,
+				description: 'Event that triggers the webhook',
 				options: [
 					{
-                        name: 'Create Contact',
-                        value: 'create_contact',
+						name: 'Activity Deleted',
+						value: 'delete_activity',
 					},
-                ],
-            },
-        ],
-    };
+					{
+						name: 'Contact Created',
+						value: 'create_contact',
+					},
+					{
+						name: 'Contact Updated',
+						value: 'update_contact',
+					},
+					{
+						name: 'Invoice PDF Created',
+						value: 'create_invoice_pdf',
+					},
+					{
+						name: 'Issue Created',
+						value: 'create_issue',
+					},
+					{
+						name: 'Issue Updated',
+						value: 'update_issue',
+					},
+					{
+						name: 'Purchase PDF Created',
+						value: 'create_purchase_pdf',
+					},
+					{
+						name: 'Quote Created',
+						value: 'create_quote',
+					},
+					{
+						name: 'Request Created',
+						value: 'create_request',
+					},
+					{
+						name: 'Request Status Changed',
+						value: 'update_request_status',
+					},
+					{
+						name: 'Task Assigned',
+						value: 'assign_task',
+					},
+					{
+						name: 'Task Created',
+						value: 'create_task',
+					},
+					{
+						name: 'Task Unassigned',
+						value: 'unassign_task',
+					},
+				],
+			},
+		],
+	};
 
 	// @ts-ignore (because of request)
 	webhookMethods = {
@@ -58,7 +106,7 @@ export class AcceloTrigger implements INodeType {
 				const webhookUrl = this.getNodeWebhookUrl('default');
 
 				const resp = await apiRequest.call(this, 'GET', 'webhooks/subscriptions');
-                const webhooks = resp['response'] as IDataObject;
+				const webhooks = resp['response'] as IDataObject;
 				for (const subscription of webhooks.subscriptions as IDataObject[]) {
 					if (subscription.trigger_url === webhookUrl) {
 						webhookData.webhookId = subscription.subscription_id;
@@ -69,32 +117,32 @@ export class AcceloTrigger implements INodeType {
 				return false;
 			},
 			async create(this: IHookFunctions): Promise<boolean> {
-				let webhookUrl = this.getNodeWebhookUrl('default') as string;
+				const webhookUrl = this.getNodeWebhookUrl('default') as string;
 				const resource = this.getNodeParameter('resource') as string;
 				const webhookData = this.getWorkflowStaticData('node');
 				const endpoint = 'webhooks/subscriptions';
 				const body = {
-                    trigger_url: webhookUrl,
-                    event_id: resource,
-                    content_type: 'application/json',
-                    //secret: ''
+					trigger_url: webhookUrl,
+					event_id: resource,
+					content_type: 'application/json',
+					//secret: ''
 				};
 
-				const resp = await apiRequest.call(this, 'POST', endpoint, body) as IDataObject;
-                const responseData = resp['response'] as IDataObject;
+				const resp = (await apiRequest.call(this, 'POST', endpoint, body)) as IDataObject;
+				const responseData = resp['response'] as IDataObject;
 				if (responseData.subscription === undefined) {
 					// Required data is missing so was not successful
 					return false;
 				}
 
-                const sub = responseData.subscription as IDataObject;
+				const sub = responseData.subscription as IDataObject;
 				webhookData.webhookId = sub.subscription_id as string;
 				return true;
 			},
 			async delete(this: IHookFunctions): Promise<boolean> {
 				const webhookData = this.getWorkflowStaticData('node');
 				if (webhookData.webhookId !== undefined) {
-                    const endpoint = `webhooks/subscriptions/${webhookData.webhookId}`;
+					const endpoint = `webhooks/subscriptions/${webhookData.webhookId}`;
 					try {
 						await apiRequest.call(this, 'DELETE', endpoint, {});
 					} catch (error) {
@@ -106,13 +154,13 @@ export class AcceloTrigger implements INodeType {
 
 				return true;
 			},
-        },
-    };
+		},
+	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
 		const req = this.getRequestObject();
 		return {
 			workflowData: [this.helpers.returnJsonArray(req.body)],
 		};
-    };
-};
+	}
+}

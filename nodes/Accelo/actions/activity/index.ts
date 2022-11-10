@@ -20,7 +20,7 @@ export const description: INodeProperties[] = [
 								name: 'Get',
 								value: 'get',
 								description: 'Get data from the Activity endpoint',
-								action: 'Get Activity data',
+								action: 'Get activity data',
 						},
 				],
 				default: 'get',
