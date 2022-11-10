@@ -46,8 +46,8 @@ export const companyCreateDescription: CompanyProperties = [
 	},
 	{
 		displayName: 'Company Comments',
-        name: 'comments',
-        type: 'string',
+				name: 'comments',
+				type: 'string',
 		default: '',
 		placeholder: 'Company Comments',
 		displayOptions: {
