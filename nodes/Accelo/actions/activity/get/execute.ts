@@ -15,5 +15,6 @@ export async function get(
 
 		const responseData = 
 				await acceloRequest.call(this, index, requestMethod, endpoint, body, qs);
+    console.log(responseData);
 	return this.helpers.returnJsonArray(responseData);
 }

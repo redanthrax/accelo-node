@@ -57,8 +57,8 @@ export class AcceloTrigger implements INodeType {
 				const webhookData = this.getWorkflowStaticData('node');
 				const webhookUrl = this.getNodeWebhookUrl('default');
 
-				const webhooks = await apiRequest.call(this, 'GET', 'webhooks/subscriptions');
-                console.log(webhooks);
+				const resp = await apiRequest.call(this, 'GET', 'webhooks/subscriptions');
+                const webhooks = resp['response'] as IDataObject;
 				for (const subscription of webhooks.subscriptions as IDataObject[]) {
 					if (subscription.trigger_url === webhookUrl) {
 						webhookData.webhookId = subscription.subscription_id;
@@ -72,7 +72,6 @@ export class AcceloTrigger implements INodeType {
 				let webhookUrl = this.getNodeWebhookUrl('default') as string;
 				const resource = this.getNodeParameter('resource') as string;
 				const webhookData = this.getWorkflowStaticData('node');
-                console.log(webhookData);
 				const endpoint = 'webhooks/subscriptions';
 				const body = {
                     trigger_url: webhookUrl,
@@ -81,8 +80,8 @@ export class AcceloTrigger implements INodeType {
                     //secret: ''
 				};
 
-				let responseData;
-				responseData = await apiRequest.call(this, 'POST', endpoint, body) as IDataObject;
+				const resp = await apiRequest.call(this, 'POST', endpoint, body) as IDataObject;
+                const responseData = resp['response'] as IDataObject;
 				if (responseData.subscription === undefined) {
 					// Required data is missing so was not successful
 					return false;
@@ -90,7 +89,6 @@ export class AcceloTrigger implements INodeType {
 
                 const sub = responseData.subscription as IDataObject;
 				webhookData.webhookId = sub.subscription_id as string;
-                console.log(webhookData);
 				return true;
 			},
 			async delete(this: IHookFunctions): Promise<boolean> {
@@ -103,8 +101,6 @@ export class AcceloTrigger implements INodeType {
 						return false;
 					}
 
-                    console.log('delete webhook');
-
 					delete webhookData.webhookId;
 				}
 
@@ -114,10 +110,7 @@ export class AcceloTrigger implements INodeType {
     };
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
-		const headerData = this.getHeaderData() as IDataObject;
 		const req = this.getRequestObject();
-        console.log('async webhook call');
-        console.log(headerData, req.body);
 		return {
 			workflowData: [this.helpers.returnJsonArray(req.body)],
 		};

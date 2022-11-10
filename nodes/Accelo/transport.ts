@@ -61,15 +61,12 @@ export async function apiRequest(
 
     const { access_token }  = await getToken.call(this, creds);
     (options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
-    console.log(options);
     //wait for accelo, too fast and it gives you a token but you can't use it
-    await delay(500);
+    await delay(200);
 
     //@ts-ignore
     const responseData = (await this.helpers.request(options)) as IDataObject;
-    console.log(responseData);
-    let response = responseData['response'] as IDataObject;
-    return response;
+    return responseData;
 }
 
 export async function apiRequestAllItems(
@@ -84,8 +81,8 @@ export async function apiRequestAllItems(
     let returnData: IDataObject[] = [];
     let responseData: IDataObject[];
     do {
-        const response = await apiRequest.call(this, method, endpoint, body, qs) as IDataObject;
-        responseData = response['response'] as IDataObject[];
+        const resp = await apiRequest.call(this, method, endpoint, body, qs);
+        responseData = resp['response'] as IDataObject[];
         returnData = returnData.concat(responseData);
         qs._page++;
     }
