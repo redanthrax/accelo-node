@@ -1,14 +1,14 @@
 import { AllEntities, Entity, PropertiesOf } from 'n8n-workflow';
 
 type AcceloMap = {
-				activity: 'get';
-				affiliation: 'get';
-		company: 'get';
-		contact: 'get';
-				issue: 'get';
-				staff: 'get';
-				request: 'get' | 'create';
-		task: 'get';
+    activity: 'get';
+    affiliation: 'get';
+    company: 'get' | 'create';
+    contact: 'get';
+    issue: 'get';
+    staff: 'get';
+    request: 'get' | 'create';
+    task: 'get';
 };
 
 export type Accelo = AllEntities<AcceloMap>;
