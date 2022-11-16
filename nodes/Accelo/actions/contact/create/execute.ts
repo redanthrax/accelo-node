@@ -13,12 +13,12 @@ export async function create(
 	const endpoint = 'contacts';
 	const body = {} as IDataObject;
 
-    body.company_id = this.getNodeParameter('company_id', index) as string;
-    body.firstname = this.getNodeParameter('firstname', index) as string;
-    body.surname = this.getNodeParameter('surname', index) as string;
-    body.email = this.getNodeParameter('email', index) as string;
+		body.company_id = this.getNodeParameter('company_id', index) as string;
+		body.firstname = this.getNodeParameter('firstname', index) as string;
+		body.surname = this.getNodeParameter('surname', index) as string;
+		body.email = this.getNodeParameter('email', index) as string;
 
-    const responseData = 
-            await apiRequest.call(this, requestMethod, endpoint, body, qs);
+		const responseData = 
+						await apiRequest.call(this, requestMethod, endpoint, body, qs);
 	return this.helpers.returnJsonArray(responseData);
 }

@@ -61,4 +61,4 @@ export const contactCreateDescription: ContactProperties = [
 		required: true,
 		description: 'The email of the Contact',
 	},
-]
+];
