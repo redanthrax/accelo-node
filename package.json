@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-accelo",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "An n8n node to connect to Accelo",
   "keywords": [
     "n8n-nodes-accelo",
