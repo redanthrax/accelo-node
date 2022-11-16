@@ -4,7 +4,7 @@ type AcceloMap = {
 		activity: 'get';
 		affiliation: 'get';
 		company: 'get' | 'create';
-		contact: 'get';
+		contact: 'get' | 'create';
 		issue: 'get';
 		staff: 'get';
 		request: 'get' | 'create';

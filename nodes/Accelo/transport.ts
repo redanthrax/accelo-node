@@ -35,6 +35,7 @@ export async function acceloRequest(
 		const getProfile = this.getNodeParameter('profile', index, false) as boolean;
 		const responseData = await apiRequestAllItems.call(this, method, endpoint, qs, body);
 
+        //get profile data to append to response
 		if(getProfile) {
 				const itemsWithProfiles: IDataObject[] = [];
 				for(const item of responseData) {
