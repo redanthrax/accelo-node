@@ -22,7 +22,7 @@ export class Accelo implements INodeType {
 				displayName: 'Accelo',
 				name: 'Accelo',
 				icon: 'file:accelo.svg',
-				group: ['transorm'],
+				group: ['transform'],
 				version: 1,
 				subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 				description: 'Utilize the Accelo API',
