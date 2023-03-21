@@ -6,6 +6,7 @@ import * as company from './actions/company';
 import * as contact from './actions/contact';
 import * as contract from './actions/contract';
 import * as issue from './actions/issue';
+import * as prospect from './actions/prospect';
 import * as request from './actions/request';
 import * as staff from './actions/staff';
 import * as task from './actions/task';
@@ -76,6 +77,10 @@ export class Accelo implements INodeType {
 												value: 'issue',
 										},
 										{
+												name: 'Prospect',
+												value: 'prospect',
+										},
+										{
 												name: 'Request',
 												value: 'request',
 										},
@@ -96,6 +101,7 @@ export class Accelo implements INodeType {
 						...contact.description,
 						...contract.description,
 						...issue.description,
+                        ...prospect.description,
 						...request.description,
 						...staff.description,
 						...task.description,

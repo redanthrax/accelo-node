@@ -79,6 +79,18 @@ const responseData = await apiRequestAllItems.call(this, 'GET', 'tasks/statuses'
 		return data;
 }
 
+export async function getProspectTypes(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+        const responseData = await apiRequestAllItems.call(this, 'GET', 'prospects/types', {});
+		const data = await parseData.call(this, responseData);
+		return data;
+}
+
+export async function getProspectStatuses(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+        const responseData = await apiRequestAllItems.call(this, 'GET', 'prospects/statuses', {});
+		const data = await parseData.call(this, responseData);
+		return data;
+}
+
 async function parseData(this: ILoadOptionsFunctions, responseData: IDataObject[]): Promise<INodePropertyOptions[]> {
 	if (responseData === undefined) {
 		throw new NodeOperationError(this.getNode(), 'No data got returned');

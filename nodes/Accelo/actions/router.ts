@@ -13,6 +13,7 @@ import * as company from './company';
 import * as contact from './contact';
 import * as contract from './contract';
 import * as issue from './issue';
+import * as prospect from './prospect';
 import * as request from './request';
 import * as staff from './staff';
 import * as task from './task';
@@ -51,6 +52,9 @@ export async function router(this: IExecuteFunctions): Promise<INodeExecutionDat
 								case 'issue':
 										responseData = await issue[accelo.operation].execute.call(this, i);
 										break;
+                                case 'prospect':
+                                        responseData = await prospect[accelo.operation].execute.call(this, i);
+                                        break;
 								case 'request':
 										responseData = await request[accelo.operation].execute.call(this, i);
 										break;

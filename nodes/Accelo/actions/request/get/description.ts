@@ -21,7 +21,7 @@ export const requestGetDescription: RequestProperties = [
 				type: 'collection',
 				placeholder: 'Add field',
 				default: {},
-				description: 'Filter the contacts request',
+				description: 'Filter the request',
 				displayOptions: {
 						show: {
 								resource: ['request'],
