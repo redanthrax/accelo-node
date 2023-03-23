@@ -65,6 +65,10 @@ export class AcceloTrigger implements INodeType {
 						name: 'Issue Updated',
 						value: 'update_issue',
 					},
+                    {
+                        name: 'Prospect Status Changed',
+                        value: '',
+                    },
 					{
 						name: 'Purchase PDF Created',
 						value: 'create_purchase_pdf',
@@ -119,24 +123,27 @@ export class AcceloTrigger implements INodeType {
 			async create(this: IHookFunctions): Promise<boolean> {
 				const webhookUrl = this.getNodeWebhookUrl('default') as string;
 				const resource = this.getNodeParameter('resource') as string;
-				const webhookData = this.getWorkflowStaticData('node');
-				const endpoint = 'webhooks/subscriptions';
-				const body = {
-					trigger_url: webhookUrl,
-					event_id: resource,
-					content_type: 'application/json',
-					//secret: ''
-				};
+                if(resource != '') {
+                    const webhookData = this.getWorkflowStaticData('node');
+                    const endpoint = 'webhooks/subscriptions';
+                    const body = {
+                        trigger_url: webhookUrl,
+                        event_id: resource,
+                        content_type: 'application/json',
+                        //secret: ''
+                    };
 
-				const resp = (await apiRequest.call(this, 'POST', endpoint, body)) as IDataObject;
-				const responseData = resp['response'] as IDataObject;
-				if (responseData.subscription === undefined) {
-					// Required data is missing so was not successful
-					return false;
-				}
+                    const resp = (await apiRequest.call(this, 'POST', endpoint, body)) as IDataObject;
+                    const responseData = resp['response'] as IDataObject;
+                    if (responseData.subscription === undefined) {
+                        // Required data is missing so was not successful
+                        return false;
+                    }
 
-				const sub = responseData.subscription as IDataObject;
-				webhookData.webhookId = sub.subscription_id as string;
+                    const sub = responseData.subscription as IDataObject;
+                    webhookData.webhookId = sub.subscription_id as string;
+                }
+
 				return true;
 			},
 			async delete(this: IHookFunctions): Promise<boolean> {

@@ -42,13 +42,13 @@ export async function update(
             status_id: 'number',
         }
 
-    body.title = title === undefined ? resp.title : title
-    body.comments = comments === undefined ? resp.comments : comments
-    body.value = value === undefined ? resp.value : value
-    body.success = success === undefined ? resp.success : success
-    body.affiliation_id = affiliation_id ? resp.affiliation_id : affiliation_id
-    body.staff_id = staff_id ? resp.staff_id : staff_id
-    body.status_id = status_id ? resp.status_id : status_id
+    body.title = title ?? resp.title
+    body.comments = comments ?? resp.comments
+    body.value = value ?? resp.value
+    body.success = success ?? resp.success
+    body.affiliation_id = affiliation_id ?? resp.affiliation_id
+    body.staff_id = staff_id ?? resp.staff_id
+    body.status_id = status_id ?? resp.status_id
 
     const responseData = 
         await apiRequest.call(this, requestMethod, endpoint, body, qs);

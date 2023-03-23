@@ -37,8 +37,3 @@ export const description: INodeProperties[] = [
         ...update.description,
 ];
 
-type ProspectSchema = {
-    title: string; 
-}
-
-export type ProspectUpdateFields = ProspectSchema
