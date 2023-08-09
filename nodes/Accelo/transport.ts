@@ -10,6 +10,9 @@ import {
 		IPollFunctions,
 } from 'n8n-workflow';
 
+let tokenExpire: Date = new Date();
+let access_token: string = '';
+
 export async function acceloRequest(
 		this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
 		index: number,
@@ -33,7 +36,7 @@ export async function acceloRequest(
 		if(search) qs._search = search;
 
 		const getProfile = this.getNodeParameter('profile', index, false) as boolean;
-		const responseData = await apiRequestAllItems.call(this, method, endpoint, qs, body);
+		const responseData = await apiRequestAllItems.call(this, method, endpoint, body, qs);
 
 				//get profile data to append to response
 		if(getProfile) {
@@ -57,30 +60,34 @@ export async function apiRequest(
 		body: IDataObject = {},
 		qs: IDataObject = {},
 ):Promise<IDataObject> {
-		const creds = await this.getCredentials('acceloApi');
-		const options: OptionsWithUri = {
-				headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/x-www-form-urlencoded',
-				},
-				method,
-				body,
-				qs,
-				uri: `https://${creds.deployment}.api.accelo.com/api/v0/${endpoint}`,
-						qsStringifyOptions: {
-						arrayFormat: 'repeat',
-				},
-				json: true,
-		};
+	const creds = await this.getCredentials('acceloApi');
+	const options: OptionsWithUri = {
+		headers: {
+			Accept: 'application/json',
+			'Content-Type': 'application/x-www-form-urlencoded',
+		},
+		method,
+		body,
+		qs,
+		uri: `https://${creds.deployment}.api.accelo.com/api/v0/${endpoint}`,
+			qsStringifyOptions: {
+			arrayFormat: 'repeat',
+		},
+		json: true,
+	};
 
-		const { access_token }  = await getToken.call(this, creds);
-		(options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
-		//wait for accelo, too fast and it gives you a token but you can't use it
-		await delay(200);
+	if (tokenExpire < (new Date())) {
+		let tokenResponse = await getToken.call(this, creds);
+		access_token = tokenResponse.access_token as string;
+		console.log(access_token);
+	}
 
-		//@ts-ignore
-		const responseData = (await this.helpers.request(options)) as IDataObject;
-		return responseData;
+	(options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
+	//wait for accelo, too fast and it gives you a token but you can't use it
+
+	//@ts-ignore
+	const responseData = (await this.helpers.request(options)) as IDataObject;
+	return responseData;
 }
 
 export async function apiRequestAllItems(
@@ -95,10 +102,14 @@ export async function apiRequestAllItems(
 		let returnData: IDataObject[] = [];
 		let responseData: IDataObject[];
 		do {
-				const resp = await apiRequest.call(this, method, endpoint, body, qs);
-				responseData = resp['response'] as IDataObject[];
-				returnData = returnData.concat(responseData);
-				qs._page++;
+			const resp = await apiRequest.call(this, method, endpoint, body, qs);
+			responseData = resp['response'] as IDataObject[];
+			returnData = returnData.concat(responseData);
+			if (responseData.length < qs._limit) {
+				break;
+			}
+
+			qs._page++;
 		}
 		while(responseData.length > 0);
 
@@ -109,7 +120,7 @@ function delay(ms: number){
 		return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function getToken(
+async function getToken(
 		this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions | IHookFunctions,
 		credentials: ICredentialDataDecryptedObject,
 ): Promise<IDataObject> {
@@ -127,6 +138,8 @@ function getToken(
 						json: true,
 		};
 
+		await delay(200);
+		tokenExpire.setHours(tokenExpire.getHours() + 2);
 		//@ts-ignore
 		return this.helpers.request(options);
 }
