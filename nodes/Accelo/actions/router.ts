@@ -63,7 +63,7 @@ export async function router(this: IExecuteFunctions): Promise<INodeExecutionDat
 								default:
 										break;
 						}
-						
+
 						const executionData = this.helpers.returnJsonArray(responseData);
 						operationResult.push(...executionData);
 				} catch (err) {
