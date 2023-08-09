@@ -36,7 +36,7 @@ export const contractGetDescription: ContractProperties = [
 								default: '',
 						},
 						{
-								displayName: 'Contract Type',
+								displayName: 'Contract Type Name or ID',
 								name: 'contract_type',
 								type: 'options',
 								description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',
@@ -46,7 +46,7 @@ export const contractGetDescription: ContractProperties = [
 								},
 						},
 						{
-								displayName: 'Contract Status',
+								displayName: 'Contract Status Name or ID',
 								name: 'status',
 								type: 'options',
 								description: 'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code-examples/expressions/">expression</a>',

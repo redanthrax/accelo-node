@@ -11,7 +11,7 @@ import {
 } from 'n8n-workflow';
 
 let tokenExpire: Date = new Date();
-let access_token: string = '';
+let accessToken = '';
 
 export async function acceloRequest(
 		this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions,
@@ -77,12 +77,11 @@ export async function apiRequest(
 	};
 
 	if (tokenExpire < (new Date())) {
-		let tokenResponse = await getToken.call(this, creds);
-		access_token = tokenResponse.access_token as string;
-		console.log(access_token);
+		const tokenResponse = await getToken.call(this, creds);
+		accessToken = tokenResponse.access_token as string;
 	}
 
-	(options.headers as IDataObject)['Authorization'] = `Bearer ${access_token}`;
+	(options.headers as IDataObject)['Authorization'] = `Bearer ${accessToken}`;
 	//wait for accelo, too fast and it gives you a token but you can't use it
 
 	//@ts-ignore
@@ -120,6 +119,11 @@ function delay(ms: number){
 		return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function addHours(date: Date, hours: number) {
+	date.setTime(date.getTime() + hours * 60 * 60 * 1000);
+	return date;
+}
+
 async function getToken(
 		this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions | IPollFunctions | IHookFunctions,
 		credentials: ICredentialDataDecryptedObject,
@@ -139,7 +143,7 @@ async function getToken(
 		};
 
 		await delay(200);
-		tokenExpire.setHours(tokenExpire.getHours() + 2);
+		tokenExpire = addHours(tokenExpire, 2);
 		//@ts-ignore
 		return this.helpers.request(options);
 }
