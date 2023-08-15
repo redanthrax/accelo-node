@@ -76,13 +76,15 @@ export async function apiRequest(
 		json: true,
 	};
 
-	if (tokenExpire < (new Date())) {
+	if (tokenExpire < (new Date()) || accessToken === '') {
 		const tokenResponse = await getToken.call(this, creds);
 		accessToken = tokenResponse.access_token as string;
 	}
 
 	(options.headers as IDataObject)['Authorization'] = `Bearer ${accessToken}`;
-	//wait for accelo, too fast and it gives you a token but you can't use it
+
+	//speed limit for accelo's api :(
+	await delay(100);
 
 	//@ts-ignore
 	const responseData = (await this.helpers.request(options)) as IDataObject;
@@ -119,8 +121,8 @@ function delay(ms: number){
 		return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function addHours(date: Date, hours: number) {
-	date.setTime(date.getTime() + hours * 60 * 60 * 1000);
+function addDays(date: Date, days: number) {
+	date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
 	return date;
 }
 
@@ -142,8 +144,7 @@ async function getToken(
 						json: true,
 		};
 
-		await delay(200);
-		tokenExpire = addHours(tokenExpire, 2);
+		tokenExpire = addDays(tokenExpire, 2);
 		//@ts-ignore
 		return this.helpers.request(options);
 }
