@@ -9,6 +9,7 @@ import {
 		IHttpRequestMethods,
 		IPollFunctions,
 } from 'n8n-workflow';
+import { response } from 'express';
 
 let tokenExpire: Date = new Date();
 let accessToken = '';
@@ -81,14 +82,30 @@ export async function apiRequest(
 		accessToken = tokenResponse.access_token as string;
 	}
 
-	(options.headers as IDataObject)['Authorization'] = `Bearer ${accessToken}`;
-
 	//speed limit for accelo's api :(
-	await delay(100);
+	//await delay(100);
+	let retries = 0;
+	let responseData: IDataObject | undefined;
+	while(retries < 5) {
+		(options.headers as IDataObject)['Authorization'] = `Bearer ${accessToken}`;
+		try {
+			responseData = (await this.helpers.request?.(options)) as IDataObject;
+		}
+		catch(error) {
+			console.log(error);
+			//refresh api token
+			const tokenResponse = await getToken.call(this, creds);
+			accessToken = tokenResponse.access_token as string;
+			await delay(200);
+			retries++;
+		}
 
-	//@ts-ignore
-	const responseData = (await this.helpers.request(options)) as IDataObject;
-	return responseData;
+		if(responseData != null) {
+			return responseData;
+		}
+	}
+
+	throw new Error("Reached maximum retries, API request failed");
 }
 
 export async function apiRequestAllItems(
