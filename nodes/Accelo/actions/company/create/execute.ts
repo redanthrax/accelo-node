@@ -1,6 +1,4 @@
-import { IExecuteFunctions } from 'n8n-core';
-
-import { IDataObject, INodeExecutionData } from 'n8n-workflow';
+import { IDataObject, IExecuteFunctions, INodeExecutionData } from 'n8n-workflow';
 
 import { apiRequest } from '../../../transport';
 
@@ -18,7 +16,7 @@ export async function create(
 		body.phone = this.getNodeParameter('phone', index) as string;
 		body.comments = this.getNodeParameter('comments', index) as string;
 
-		const responseData = 
+		const responseData =
 				await apiRequest.call(this, requestMethod, endpoint, body, qs);
 	return this.helpers.returnJsonArray(responseData);
 }
