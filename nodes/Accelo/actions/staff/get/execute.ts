@@ -1,6 +1,4 @@
-import { IExecuteFunctions } from 'n8n-core';
-
-import { IDataObject, INodeExecutionData } from 'n8n-workflow';
+import { IDataObject, IExecuteFunctions, INodeExecutionData } from 'n8n-workflow';
 
 import { acceloRequest } from '../../../transport';
 
@@ -13,7 +11,7 @@ export async function get(
 	const endpoint = 'staff';
 	const body = {} as IDataObject;
 
-		const responseData = 
+		const responseData =
 				await acceloRequest.call(this, index, requestMethod, endpoint, body, qs);
 	return this.helpers.returnJsonArray(responseData);
 }

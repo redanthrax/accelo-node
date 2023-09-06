@@ -20,6 +20,7 @@
 		"sourceMap": true,
 		"esModuleInterop": true,
 		"useUnknownInCatchVariables": false,
+		"skipLibCheck": true
 	},
 	"include": [
 		"credentials/**/*",
@@ -27,4 +28,7 @@
 		"nodes/**/*.json",
 		"package.json",
 	],
+	"exclude": [
+		"node_modules"
+	]
 }

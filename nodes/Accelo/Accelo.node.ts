@@ -1,4 +1,8 @@
-import { IExecuteFunctions } from 'n8n-core';
+import {
+	IExecuteFunctions,
+	INodeType,
+	INodeTypeDescription,
+} from 'n8n-workflow';
 
 import * as activity from './actions/activity';
 import * as affiliation from './actions/affiliation';
@@ -9,11 +13,6 @@ import * as issue from './actions/issue';
 import * as request from './actions/request';
 import * as staff from './actions/staff';
 import * as task from './actions/task';
-
-import {
-		INodeType,
-		INodeTypeDescription,
-} from 'n8n-workflow';
 
 import { loadOptions } from './methods';
 import { router } from './actions/router';
